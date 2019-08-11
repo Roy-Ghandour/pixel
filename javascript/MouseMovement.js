@@ -71,14 +71,14 @@ function mouseMove(mouse_x, mouse_y) {
             event.pageY = event.clientY +
                 (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
                 (doc && doc.clientTop  || body && body.clientTop  || 0 );
-    }
+            }
 
-    //Script:
-    //Recording the previous mouse x position
-    prev_mouse_x = event.pageX;
-    //Recording the previous mouse y position
-    prev_mouse_y = event.pageY;
-    //Running the script above with gathered x and y position
-    mouseMove(event.pageX, event.pageY);
-  }
+        //Script:
+        //Recording the previous mouse x position
+        prev_mouse_x = event.pageX;
+        //Recording the previous mouse y position
+        prev_mouse_y = event.pageY;
+        //Running the script above with gathered x and y position
+        mouseMove(event.pageX, event.pageY);
+    }
 })();
