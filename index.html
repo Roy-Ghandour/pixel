@@ -2,30 +2,38 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="Style.css">
-        <script type="text/javascript" src="ToolKit.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <title>Pixels</title>
+
+        <link rel="stylesheet" href="css/Main.css">
+        <link rel="stylesheet" href="css/Header.css">
+
+        <script type="text/javascript" src="javascript/Core.js"></script>
+        <script type="text/javascript" src="javascript/MouseMovement.js"></script>
+        <script type="text/javascript" src="javascript/ToolKit.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
 
     <body>
         <div id="header">
-
             <div class="component">
-                <div id="color1" class="component">
+                <div id="color1" class="component color">
                     <form class="" action="index.html" method="post">
-                        <input id="color1_text" type="text" value="#ffe303" maxlength="7" readonly> <!--temp readonly-->
+                        <!--temp readonly-->
+                        <input id="color1_text" type="text" value="#ffe303" maxlength="7" readonly>
                     </form>
                 </div>
             </div>
+
             <div id="night_toggle" class="component" onclick="toggle_night()">
                 <div id="sun" class="icon"></div>
                 <div id="moon" class="icon"></div>
             </div>
+
             <div class="component">
-                <div id="color2" class="component">
+                <div id="color2" class="component color">
                     <form>
-                        <input id="color2_text" type="text" value="#ffe303" maxlength="7" readonly> <!--temp readonly-->
+                         <!--temp readonly-->
+                        <input id="color2_text" type="text" value="#ffe303" maxlength="7" readonly>
                     </form>
                 </div>
             </div>
@@ -34,15 +42,43 @@
         <div id="background">
             <span id="output"></span>
         </div>
+
+        <div id="overlay">
+            <div>
+                <span>Press the spacebar to get different results!</span>
+            </div>
+        </div>
     </body>
 
     <script type="text/javascript">
-        //Update alert (v1.2)
-        //Will be commented for testing pruposes v1.2
-        alert("Update v1.2:\n"+
+        //Update alert (v1.3)
+        //Will be commented for testing pruposes of v1.4
+        alert("Update v1.3:\n"+
             "There is no longer any need to refresh the page! Try out\n"+
             "the space bar to get different results! Also try clicking\n"+
             "the sun button ;)");
+
+        /*
+        Change Log:
+            Update v1.1:
+                Added spacebar to change cube_color1 and cube_color2
+                Added the update message
+            Update v1.2:
+                Removed spacebar to change cube_color1 and cube_color2
+                Added spacebar to refresh the results of the page
+                Added the ToolKit.js file for cleaning
+                Added general comments
+                Added changelog
+                Increased num_of_cubes from 140 to 160
+                Reformatted script
+            Update v1.3:
+                Added previous mosue position tracking to make transion more fluid
+                Added comments to all scripts
+                Added spacebar prompt
+                Reformatted night_toggle and header
+                Organised file structure
+                Organised scripts
+        */
 
         //EDITABLE AREA STARTS HERE//-----------------------------------------------------------
 
@@ -58,123 +94,14 @@
 
         //Maximum x value of the cubes position
         var max_x = document.documentElement.clientWidth - 60;
-        //30 pixels are added afterwards to create a padding effect
+        //30 pixels are added afterwards to create a padding effect (30px each side)
 
         //Maximum y value of the cubes position
         var max_y = Math.floor(document.documentElement.clientHeight * 0.86) - 30;
         //Using 86% of the height of the document to account for the header
-        //+ 15 pixels are added afterwards to create a padding effect
+        //+ 15 pixels are added afterwards to create a padding effect (15px each side)
 
         //EDITABLE AREA ENDS HERE//--------------------------------------------------------------
-
-        //The array that holds all of the cubes
-        var cubes = null;
-
-        //The script to generate the cubes
-        function generate() {
-            cube_color1 = random(360);
-            cube_color2 = random(360);
-
-            if (cubes != null) {
-                for (var i = 0; i < cubes.length; i++) {
-                    cubes[i].div.remove();
-                }
-            }
-
-            cubes = new Array(num_of_cubes);
-
-            var plane = document.getElementById('background');
-            for (var i = 0; i < cubes.length; i++) {
-                var cube = new Object();
-                cube.width = min_width + random(max_width - min_width);
-                cube.height = min_height + random(max_height - min_height);
-                cube.x = random(max_x - cube.width) + 30;
-                cube.y = random((max_y - cube.height)) + Math.floor(document.documentElement.clientHeight * 0.14) + 15;
-
-                cube.cp_x = cube.x + Math.round(cube.width / 2);
-                cube.cp_y = cube.y + Math.round(cube.height / 2);
-
-                cube.div = document.createElement("DIV");
-                cube.div.className = "cube";
-                cube.div.id = i;
-                plane.appendChild(cube.div);
-
-                var div = $('.cube#' + i);
-
-                div.css("width", cube.width + "px");
-                div.css("height", cube.height + "px");
-                div.css("left", cube.x + "px");
-                div.css("top", cube.y + "px");
-
-                if (i < num_of_cubes / 4) {
-                    cube.color = cube_color1;
-                } else if (i < num_of_cubes / 2) {
-                    cube.color = cube_color2;
-                } else if (i < num_of_cubes - (num_of_cubes / 4)) {
-                    cube.color = cube_color1;
-                } else {
-                    cube.color = cube_color2;
-                }
-
-                cube.brightness = 50 + random(25);
-                div.css("background-color", "hsl(" + cube.color + ", 0%, " + cube.brightness + "%)");
-
-                cubes[i] = cube;
-            }
-
-            $('#color1').css("background-color", "hsl(" + cube_color2 + ", 100%, 60%)");
-            $('#color2').css("background-color", "hsl(" + cube_color1 + ", 100%, 60%)");
-
-            document.getElementById('color1_text').value = hslToHex(cube_color2, 100, 60);
-            document.getElementById('color2_text').value = hslToHex(cube_color1, 100, 60);
-        }
-
-        //Mouse movment listener
-        (function() {
-            "use strict";
-
-            document.onmousemove = handleMouseMove;
-            function handleMouseMove(event) {
-                var dot, eventDoc, doc, body, pageX, pageY;
-
-                event = event || window.event; // IE-ism
-
-                    // If pageX/Y aren't available and clientX/Y
-                    // are, calculate pageX/Y - logic taken from jQuery
-                    // Calculate pageX/Y if missing and clientX/Y available
-                if (event.pageX == null && event.clientX != null) {
-                    eventDoc = (event.target && event.target.ownerDocument) || document;
-                    doc = eventDoc.documentElement;
-                    body = eventDoc.body;
-
-                    event.pageX = event.clientX +
-                        (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                        (doc && doc.clientLeft || body && body.clientLeft || 0);
-                    event.pageY = event.clientY +
-                        (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
-                        (doc && doc.clientTop  || body && body.clientTop  || 0 );
-            }
-
-            //Script:
-            for (var i = 0; i < cubes.length; i++) {
-                var x_dist = cubes[i].cp_x - Math.round(event.pageX);
-                var y_dist = cubes[i].cp_y - Math.round(event.pageY);
-
-                x_dist = x_dist * x_dist;
-                y_dist = y_dist * y_dist;
-
-                var distance = Math.round(Math.sqrt(x_dist + y_dist));
-
-                if (distance <= 200) {
-                    var sat = 200 + (distance * -1);
-                    if (sat > 100) sat = 100;
-                    $(".cube#" + i).css("background-color", "hsl(" + cubes[i].color + ", " + sat + "%, " + (cubes[i].brightness + 10) + "%)");
-                } else {
-                    $(".cube#" + i).css("background-color", "hsl(" + cubes[i].color + ", 0%, " + cubes[i].brightness + "%)");
-                }
-            }
-          }
-        })();
 
         //Inital generation
         generate();
@@ -182,58 +109,13 @@
         //Key listener for spacebar press
         document.onkeypress = function (e) {
             e = e || window.event;
+            //Detecting spacebar press
             if (e.keyCode == 32) {
+                //Getting rid of the user prompt
+                $('#overlay').css("display", "none");
+                //Refreshing the current display of cubes
                 generate();
             }
         };
-
-        //Variable tracking the state of the page
-        var night = false;
-        //Function toggling the state of the page
-        function toggle_night() {
-            if (!night) {
-                $('#sun').css("display", "none");
-                $('#moon').css("display", "block");
-                $('#night_toggle').css("background-color", "#2d3436");
-                $('#header').css("background-color", "#2d3436");
-                $('#background').css("background-color", "#2d3436");
-                night = true;
-            } else {
-                $('#moon').css("display", "none");
-                $('#sun').css("display", "block");
-                $('#night_toggle').css("background-color", "#FBFAF8");
-                $('#header').css("background-color", "#FBFAF8");
-                $('#background').css("background-color", "#FBFAF8");
-                night = false;
-            }
-        }
-
-        /*
-        //Brief on a possible future automatic version of nightmode
-        //Has promise but the average is not acurate with vastly different colors
-        //also the average is far more likely to be within the middle of the spectrum and thus dark mode is more common
-        var night;
-        var avg_color = (cube_color1 + cube_color2) / 2;
-        if (avg_color <= 90 || avg_color > 270) {
-            night = true; //inverse
-        } else {night = false}
-
-        //requires: toggle_night(); at the end of the script
-        */
-
-        /*
-        Change Log:
-            Update v1.1:
-                Added spacebar to change cube_color1 and cube_color2
-                Added the update message
-            Update v1.2:
-                Removed spacebar to change cube_color1 and cube_color2
-                Added spacebar to refresh the results of the page
-                Added the ToolKit.js file for cleaning
-                Added general comments
-                Added changelog
-                Increased num_of_cubes from 140 to 160
-                Reformatted script
-        */
     </script>
 </html>
