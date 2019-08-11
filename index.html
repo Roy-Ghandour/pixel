@@ -36,6 +36,9 @@
     </body>
 
     <script type="text/javascript">
+        //Update alert
+        alert("Update v1.1:\nYou can now use the space bar to change the colours of the cubes!\nAlso try clicking the sun icon ;)");
+
         function random(cap) {
             return Math.floor(Math.random()*cap);
         }
@@ -205,5 +208,34 @@
                 night = false;
             }
         }
+
+        function changeColors() {
+            for (var i = 0; i < num_of_cubes; i++) {
+                if (i < num_of_cubes / 4) {
+                    cubes[i].color = cube_color1;
+                } else if (i < num_of_cubes / 2) {
+                    cubes[i].color = cube_color2;
+                } else if (i < num_of_cubes - (num_of_cubes / 4)) {
+                    cubes[i].color = cube_color1;
+                } else {
+                    cubes[i].color = cube_color2;
+                }
+            }
+
+            $('#color1').css("background-color", "hsl(" + cube_color2 + ", 100%, 60%)");
+            $('#color2').css("background-color", "hsl(" + cube_color1 + ", 100%, 60%)");
+
+            document.getElementById('color1_text').value = hslToHex(cube_color2, 100, 60);
+            document.getElementById('color2_text').value = hslToHex(cube_color1, 100, 60);
+        }
+
+        document.onkeypress = function (e) {
+            e = e || window.event;
+            if (e.keyCode == 32) {
+                cube_color1 = random(360);
+                cube_color2 = random(360);
+                changeColors();
+            }
+        };
     </script>
 </html>
