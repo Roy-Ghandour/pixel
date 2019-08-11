@@ -1,9 +1,10 @@
-//Update alert for v1.4
-//Will be commented for testing pruposes of v1.5
-alert("Update v1.4:\n"+
+//Update alert for v1.5
+//Will be commented for testing pruposes of v1.6
+alert("Update v1.5:\n"+
     "There is no longer any need to refresh the page! Try out\n"+
     "the space bar to get different results! Also try clicking\n"+
-    "the sun button ;)");
+    "the sun button ;).\n\n"+
+    "If there are any issues simply click the page to alert it.");
 
 /*
 Change Log:
@@ -28,9 +29,11 @@ Change Log:
     Update v1.4:
         Refined prompt css
         Organised update scripts
+    Update v1.5:
+        Added a line to the update alert
 */
 
 /*
-Plans for update v1.5: (^ = completed)
+Plans for update v1.6: (^ = completed)
 
 */
