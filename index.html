@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" href="Style.css">
+        <script type="text/javascript" src="ToolKit.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <title>Pixels</title>
     </head>
@@ -36,67 +37,99 @@
     </body>
 
     <script type="text/javascript">
-        //Update alert
-        //v1.1
-        alert("Update v1.1:\nYou can now use the space bar to change the colours of the cubes!\nAlso try clicking the sun icon ;)");
+        //Update alert (v1.2)
+        //Will be commented for testing pruposes v1.2
+        alert("Update v1.2:\n"+
+            "There is no longer any need to refresh the page! Try out\n"+
+            "the space bar to get different results! Also try clicking\n"+
+            "the sun button ;)");
 
-        function random(cap) {
-            return Math.floor(Math.random()*cap);
-        }
+        //EDITABLE AREA STARTS HERE//-----------------------------------------------------------
 
-        var num_of_cubes = 140;
-        var cube_color1 = random(360); //hue of the cubes
-        var cube_color2 = random(360); //hue of the cubes
+        //Settings:
+        var num_of_cubes = 160; //Number of total cubes generated
+        var cube_color1;        //Hue of the cubes, can be fixed here
+        var cube_color2;        //Hue of the cubes, can be fixed here
 
-        var max_width = 150;
-        var max_height = 150;
-        var min_width = 60;
-        var min_height = 60;
+        var max_width = 150;    //Maximum width of the cubes in pixels
+        var max_height = 150;   //Maximum height of the cubes in pixels
+        var min_width = 60;     //Minimum width of the cubes in pixels
+        var min_height = 60;    //Minimum width of the cubes in pixels
 
-        var max_x = document.documentElement.clientWidth - 60; //30 is added later to create a padding effect (same for the y with 15 being added)
-        var max_y = Math.floor(document.documentElement.clientHeight * 0.86) - 30; //accounting for the header
+        //Maximum x value of the cubes position
+        var max_x = document.documentElement.clientWidth - 60;
+        //30 pixels are added afterwards to create a padding effect
 
-        var cubes = new Array(num_of_cubes);
+        //Maximum y value of the cubes position
+        var max_y = Math.floor(document.documentElement.clientHeight * 0.86) - 30;
+        //Using 86% of the height of the document to account for the header
+        //+ 15 pixels are added afterwards to create a padding effect
 
-        var plane = document.getElementById('background');
-        for (var i = 0; i < cubes.length; i++) {
-            var cube = new Object();
-            cube.width = min_width + random(max_width - min_width);
-            cube.height = min_height + random(max_height - min_height);
-            cube.x = random(max_x - cube.width) + 30;
-            cube.y = random((max_y - cube.height)) + Math.floor(document.documentElement.clientHeight * 0.14) + 15;
+        //EDITABLE AREA ENDS HERE//--------------------------------------------------------------
 
-            cube.cp_x = cube.x + Math.round(cube.width / 2);
-            cube.cp_y = cube.y + Math.round(cube.height / 2);
+        //The array that holds all of the cubes
+        var cubes = null;
 
-            cube.div = document.createElement("DIV");
-            cube.div.className = "cube";
-            cube.div.id = i;
-            plane.appendChild(cube.div);
+        //The script to generate the cubes
+        function generate() {
+            cube_color1 = random(360);
+            cube_color2 = random(360);
 
-            var div = $('.cube#' + i);
-
-            div.css("width", cube.width + "px");
-            div.css("height", cube.height + "px");
-            div.css("left", cube.x + "px");
-            div.css("top", cube.y + "px");
-
-            if (i < num_of_cubes / 4) {
-                cube.color = cube_color1;
-            } else if (i < num_of_cubes / 2) {
-                cube.color = cube_color2;
-            } else if (i < num_of_cubes - (num_of_cubes / 4)) {
-                cube.color = cube_color1;
-            } else {
-                cube.color = cube_color2;
+            if (cubes != null) {
+                for (var i = 0; i < cubes.length; i++) {
+                    cubes[i].div.remove();
+                }
             }
 
-            cube.brightness = 50 + random(25);
-            div.css("background-color", "hsl(" + cube.color + ", 0%, " + cube.brightness + "%)");
+            cubes = new Array(num_of_cubes);
 
-            cubes[i] = cube;
+            var plane = document.getElementById('background');
+            for (var i = 0; i < cubes.length; i++) {
+                var cube = new Object();
+                cube.width = min_width + random(max_width - min_width);
+                cube.height = min_height + random(max_height - min_height);
+                cube.x = random(max_x - cube.width) + 30;
+                cube.y = random((max_y - cube.height)) + Math.floor(document.documentElement.clientHeight * 0.14) + 15;
+
+                cube.cp_x = cube.x + Math.round(cube.width / 2);
+                cube.cp_y = cube.y + Math.round(cube.height / 2);
+
+                cube.div = document.createElement("DIV");
+                cube.div.className = "cube";
+                cube.div.id = i;
+                plane.appendChild(cube.div);
+
+                var div = $('.cube#' + i);
+
+                div.css("width", cube.width + "px");
+                div.css("height", cube.height + "px");
+                div.css("left", cube.x + "px");
+                div.css("top", cube.y + "px");
+
+                if (i < num_of_cubes / 4) {
+                    cube.color = cube_color1;
+                } else if (i < num_of_cubes / 2) {
+                    cube.color = cube_color2;
+                } else if (i < num_of_cubes - (num_of_cubes / 4)) {
+                    cube.color = cube_color1;
+                } else {
+                    cube.color = cube_color2;
+                }
+
+                cube.brightness = 50 + random(25);
+                div.css("background-color", "hsl(" + cube.color + ", 0%, " + cube.brightness + "%)");
+
+                cubes[i] = cube;
+            }
+
+            $('#color1').css("background-color", "hsl(" + cube_color2 + ", 100%, 60%)");
+            $('#color2').css("background-color", "hsl(" + cube_color1 + ", 100%, 60%)");
+
+            document.getElementById('color1_text').value = hslToHex(cube_color2, 100, 60);
+            document.getElementById('color2_text').value = hslToHex(cube_color1, 100, 60);
         }
 
+        //Mouse movment listener
         (function() {
             "use strict";
 
@@ -143,55 +176,20 @@
           }
         })();
 
-        $('#color1').css("background-color", "hsl(" + cube_color2 + ", 100%, 60%)");
-        $('#color2').css("background-color", "hsl(" + cube_color1 + ", 100%, 60%)");
+        //Inital generation
+        generate();
 
-        function hslToHex(h, s, l) {
-          h /= 360;
-          s /= 100;
-          l /= 100;
-          let r, g, b;
-          if (s === 0) {
-            r = g = b = l; // achromatic
-          } else {
-            const hue2rgb = (p, q, t) => {
-              if (t < 0) t += 1;
-              if (t > 1) t -= 1;
-              if (t < 1 / 6) return p + (q - p) * 6 * t;
-              if (t < 1 / 2) return q;
-              if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-              return p;
-            };
-            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            const p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1 / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1 / 3);
-          }
-          const toHex = x => {
-            const hex = Math.round(x * 255).toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-          };
-          return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-        }
+        //Key listener for spacebar press
+        document.onkeypress = function (e) {
+            e = e || window.event;
+            if (e.keyCode == 32) {
+                generate();
+            }
+        };
 
-        document.getElementById('color1_text').value = hslToHex(cube_color2, 100, 60);
-        document.getElementById('color2_text').value = hslToHex(cube_color1, 100, 60);
-
-
-        /*
-        //Has promise but the average is not acurate with vastly different colors
-        //also the average is far more likely to be within the middle of the spectrum and thus dark mode is more common
-        var night;
-        var avg_color = (cube_color1 + cube_color2) / 2;
-        if (avg_color <= 90 || avg_color > 270) {
-            night = true; //inverse
-        } else {night = false}
-
-        //requires: toggle_night(); at the end of the script
-        */
-
+        //Variable tracking the state of the page
         var night = false;
+        //Function toggling the state of the page
         function toggle_night() {
             if (!night) {
                 $('#sun').css("display", "none");
@@ -210,33 +208,32 @@
             }
         }
 
-        function changeColors() {
-            for (var i = 0; i < num_of_cubes; i++) {
-                if (i < num_of_cubes / 4) {
-                    cubes[i].color = cube_color1;
-                } else if (i < num_of_cubes / 2) {
-                    cubes[i].color = cube_color2;
-                } else if (i < num_of_cubes - (num_of_cubes / 4)) {
-                    cubes[i].color = cube_color1;
-                } else {
-                    cubes[i].color = cube_color2;
-                }
-            }
+        /*
+        //Brief on a possible future automatic version of nightmode
+        //Has promise but the average is not acurate with vastly different colors
+        //also the average is far more likely to be within the middle of the spectrum and thus dark mode is more common
+        var night;
+        var avg_color = (cube_color1 + cube_color2) / 2;
+        if (avg_color <= 90 || avg_color > 270) {
+            night = true; //inverse
+        } else {night = false}
 
-            $('#color1').css("background-color", "hsl(" + cube_color2 + ", 100%, 60%)");
-            $('#color2').css("background-color", "hsl(" + cube_color1 + ", 100%, 60%)");
+        //requires: toggle_night(); at the end of the script
+        */
 
-            document.getElementById('color1_text').value = hslToHex(cube_color2, 100, 60);
-            document.getElementById('color2_text').value = hslToHex(cube_color1, 100, 60);
-        }
-
-        document.onkeypress = function (e) {
-            e = e || window.event;
-            if (e.keyCode == 32) {
-                cube_color1 = random(360);
-                cube_color2 = random(360);
-                changeColors();
-            }
-        };
+        /*
+        Change Log:
+            Update v1.1:
+                Added spacebar to change cube_color1 and cube_color2
+                Added the update message
+            Update v1.2:
+                Removed spacebar to change cube_color1 and cube_color2
+                Added spacebar to refresh the results of the page
+                Added the ToolKit.js file for cleaning
+                Added general comments
+                Added changelog
+                Increased num_of_cubes from 140 to 160
+                Reformatted script
+        */
     </script>
 </html>
